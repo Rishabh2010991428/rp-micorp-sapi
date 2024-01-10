@@ -1,0 +1,10 @@
+#listener config
+http:
+  port: "80"
+  host: ""
+  basePath: "/micorp"
+  
+#Client ID:
+#ca4687a72dad4c5b86b3146d9930e676
+#Client Secret:
+#E55eeF6D7b43441288fEeF210548Ee0D

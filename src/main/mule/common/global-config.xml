@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="105efa24-c414-4f27-8329-243f75cc7018" basePath="${http.basePath}" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+	<apikit:config outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" doc:name="Router" doc:id="3ed02d98-ea8e-4590-b854-08487b31d2f1" name="rp-micorp-sapi-config" api="resource::ce235d46-115c-497c-b0e2-474afd80f5e9:micorp-usecase:1.0.0:raml:zip:rp-micorp-sapi.raml" />
+	<salesforce:sfdc-config name="Salesforce_Config1" doc:name="Salesforce Config" doc:id="a5db640a-d59c-4c4f-bc23-a8555ad00290" >
+		<salesforce:basic-connection username="${secure::salesforce.user}" password="${secure::salesforce.password}" securityToken="${secure::salesforce.token}" url="${secure::salesforce.url}" />
+	</salesforce:sfdc-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="e10f38fb-dab1-4f88-b27a-c8a4032dc0f8" file="properties\\${mule.env}.yaml" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="c1e0e455-cea7-430d-8791-96a48dbb70c6" file="secure\secure-${mule.env}.yaml" key="${mule.encryption.key}" />
+	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="c7f5100c-f2b6-4126-b8b2-9252097b65a6" environment="${mule.env}"/>
+	<configuration-properties doc:name="Configuration properties" doc:id="1c9a230a-6985-4e0f-aa25-b69e7e44ed99" file="properties\common.yaml" />
+	<api-gateway:autodiscovery apiId="19211767" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="c477ed72-9ff9-495f-8724-dc14adaf4501" flowRef="rp-micorp-sapi-main" />
+</mule>

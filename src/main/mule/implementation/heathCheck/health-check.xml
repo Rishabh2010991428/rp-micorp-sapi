@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<sub-flow name="health-checkSub_Flow" doc:id="e317da62-41c2-4555-b074-79883b816e03" >
+		<json-logger:logger doc:name="Start Log" doc:id="082aa1ea-696b-4c5a-b07f-2ca40063b476" config-ref="JSON_Logger_Config" message="Health Check flow started"/>
+		<ee:transform doc:name="Set Payload" doc:id="1ef3facd-a26b-4b59-9316-ffe66beab35c">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  status: 200,
+  message: "The rp-micorp-sapi is live"
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="End Log" doc:id="b9ed0f08-01a2-41ee-ae17-7bad51c46a21" config-ref="JSON_Logger_Config" message="Health Check flow ended"/>
+	</sub-flow>
+	
+
+	
+	
+	
+</mule>

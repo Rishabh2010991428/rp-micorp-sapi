@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="c8549879-7954-440a-ab67-4b611c9c5471">
+		<salesforce:basic-connection username="rishabh.pandey@caeliusconsulting.com" password="Mastercaelius@0071" securityToken="oeVKXJyjb6ZEevgQx4cKZBeY" url="https://login.salesforce.com/services/Soap/u/58.0" />
+	</salesforce:sfdc-config>
+	<sub-flow name="customerSub_Flow1" doc:id="34d6feda-69a6-49b6-a195-8085e68e695d">
+		<json-logger:logger doc:name="Start Log" doc:id="69dd21aa-25c2-4a16-84dd-29b41d8ff1e3" message="Create customer flow started" config-ref="JSON_Logger_Config"/>
+		<ee:transform doc:name="Input payload" doc:id="3ea0c1e4-6b47-4341-8dec-bc130a0e1f7e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[{
+	firstName__c: payload.firstName,
+	lastName__c: payload.lastName,
+	phoneNumber__c: payload.phoneNumber,
+	email__c: payload.email,
+	address__c:"$(payload.address.address1) $(payload.address.city) $(payload.address.zipcode) $(payload.address.country)"
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create doc:id="c8549879-7954-440a-ab67-4b611c9c5471" config-ref="Salesforce_Config" type="Customer__c" doc:name="POST :/ Customer"/>
+		<ee:transform doc:name="Final payload">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="Logger" doc:id="3b13c4ae-4795-426a-bd15-0b415072e700" config-ref="JSON_Logger_Config" message="Customer flow has ended"/>
+	
+</sub-flow>
+
+</mule>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="   http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd   http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd   http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="post-orders-test-suite.xml"/>
+	<munit:test description="Test" doc:id="7c878b64-67d7-41c8-919d-2e5eb98466f1" name="orders-test-suite-ordersSub_FlowTest">
+		<munit:behavior>
+			<munit-tools:mock-when doc:id="2f98b4fb-525a-4e91-a5f9-a9a38c90eb1c" doc:name="Mock when" processor="salesforce:create">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute attributeName="doc:id" whereValue="f4f51d20-5444-4ce6-9a2a-49690416afff"/>
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[readUrl('classpath://postOrderTestSuccess/mock_payload.dwl')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:id="5d61ae61-efdf-45b1-a7f7-0041dc4ce9ae" doc:name="Set Event">
+				<munit:payload value="#[readUrl('classpath://postOrderTestSuccess/set_event_payload.dwl')]" />
+			</munit:set-event>
+			<flow-ref doc:id="7e0c045c-9abf-45c1-b0e1-f73810cfe7b2" doc:name="Flow-ref to ordersSub_Flow" name="post:\order:application\json:rp-micorp-sapi-config"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:id="7f01fc84-7e66-4da3-825f-df8d1f9c317b" doc:name="Assert that" is="#[%dw 2.0&#10;import postOrderTestSuccess::assert_that_payload&#10;---&#10;assert_that_payload::main({payload: payload, attributes: attributes, vars: vars})]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

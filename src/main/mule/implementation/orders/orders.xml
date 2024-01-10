@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<sub-flow name="ordersSub_Flow" doc:id="0fdc6c30-113b-45cb-abc2-65ef03897a98" >
+		<json-logger:logger doc:name="Start Log" doc:id="ab22b621-cc49-4e7c-b70f-ec3188240c46" config-ref="JSON_Logger_Config" message="Orders flow started"/>
+		<ee:transform doc:name="order" doc:id="4ea4365c-e71d-4f5d-9738-fcba3923bfbe">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+[{
+    poNumber__c: payload.poNumber as Number,
+    signatureRequiredFlag__c: payload.signatureRequiredFlag,
+    shipInstructions__c: payload.shipInstructions,
+    giftWrapFlag__c: payload.giftWrapFlag,
+    giftWrapMessage__c: payload.giftWrapMessage,
+    currencyCode__c: payload.currencyCode,
+    subTotal__c: payload.subTotal,
+    customerId__c: payload.customerId
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create doc:name="createOrder" doc:id="f4f51d20-5444-4ce6-9a2a-49690416afff" config-ref="Salesforce_Config" type="Order__c"/>
+		<ee:transform doc:name="Set Payload">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<json-logger:logger doc:name="End Log" doc:id="566f9712-4f19-4aef-888b-6d067a66132d" config-ref="JSON_Logger_Config" message="Orders flow has ended"/>
+	
+</sub-flow>
+
+
+		
+	
+</mule>

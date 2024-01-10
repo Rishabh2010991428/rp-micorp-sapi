@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<sub-flow name="itemsSub_Flow" doc:id="37d1b6c7-f6c3-48ea-8c87-0bc8737785ee">
+		<json-logger:logger doc:name="Start Log" doc:id="71df7208-38b3-429c-bed6-cd61a999018b" config-ref="JSON_Logger_Config" message="Items flow has started"/>
+		<ee:transform doc:name="Set input payload" doc:id="19fc5263-b530-426a-8d1c-8b4657c82c59" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload map ((item, index) -> {
+    id__c: payload.id[index],
+    category__c: payload.category[index],
+    quantity__c: payload.quantity[index],
+    size__c: payload.size[index],
+    orderId__c: payload.orderId[index]
+} )]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create doc:name="POST :/ Items" doc:id="7e99dc20-11d8-4171-8c88-01d7b25177ec" config-ref="Salesforce_Config" type="Item__c"/>
+		<ee:transform doc:name="End Log">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+	
+</sub-flow>
+
+	
+	
+		
+</mule>

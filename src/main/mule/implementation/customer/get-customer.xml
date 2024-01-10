@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	
+	<sub-flow name="customerSub_Flow" doc:id="37298d3d-38c5-4a09-a1ea-332079b09ddf" >
+		<json-logger:logger doc:name="Start Log" doc:id="6e3f636a-fbf2-451d-974f-35111eb41dd4" config-ref="JSON_Logger_Config" message="Get customer flow started"/>
+		<salesforce:query doc:name="GET :/ Customer" doc:id="b32b74a4-259c-4e03-922a-6a9fa8fd0cd8" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query><![CDATA[select name, fields(custom) from customer__c where email__c=':email' limit 1]]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	email : attributes.uriParams.email
+}]]]></salesforce:parameters>
+		
+</salesforce:query>
+		<ee:transform doc:name="Final Payload" doc:id="ad29761c-a675-4306-a18c-03a348c2f34e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="End Log" doc:id="fb181c54-2226-49ea-ac19-c15ae2ef7b59" config-ref="JSON_Logger_Config" message="End of the flow."/>
+	
+</sub-flow>
+	
+	</mule>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="health-check-test-suite.xml" />
+	<munit:test name="health-check-test-suite-health-checkSub_FlowTest" doc:id="53d51c4a-ff8b-43ed-ab91-9c18371b7ae6" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to health-checkSub_Flow" doc:id="21535f02-2ed4-43c2-b126-6198dc8fc11a" name="get:\healthCheck:rp-micorp-sapi-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify call" doc:id="e508a031-9223-4bba-9b20-c9da1d3e7500" processor="json-logger:logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="b9ed0f08-01a2-41ee-ae17-7bad51c46a21" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

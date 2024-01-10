@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:module-error-handler-plugin="http://www.mulesoft.org/schema/mule/module-error-handler-plugin" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/module-error-handler-plugin http://www.mulesoft.org/schema/mule/module-error-handler-plugin/current/mule-module-error-handler-plugin.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	
+	<error-handler name="global-error-handlerError_Handler" doc:id="0865a8d8-90f9-4d68-ae54-f9e2414d6e2a" >
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="65185235-1823-478e-ac49-ec54caf8ce1c" >
+			<module-error-handler-plugin:process-error doc:name="Process Error" doc:id="434be1a3-0f91-4822-842c-faaf996ad103" />
+			<set-variable value="#[attributes.httpStatus]" doc:name="Status" doc:id="21a7e70c-3ddd-4183-9f5a-f3ea9b5cd469" variableName="httpStatus"/>
+			<json-logger:logger doc:name="End Log" doc:id="594a2244-90dd-4786-a4c9-442268e60853" config-ref="JSON_Logger_Config" message="Flow has ended"/>
+		</on-error-continue>
+
+            
+	</error-handler>
+	
+	
+</mule>

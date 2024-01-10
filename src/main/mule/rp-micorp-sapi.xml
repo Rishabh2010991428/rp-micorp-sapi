@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+    <flow name="rp-micorp-sapi-main" doc:id="a868ddd7-fbda-4548-8b95-a4dfdecd0ed1">
+        <http:listener config-ref="HTTP_Listener_config" path="/*" doc:name="Http request listener">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+		<apikit:router config-ref="rp-micorp-sapi-config"/>
+		<error-handler ref="global-error-handlerError_Handler" />
+        
+    </flow>
+    <!-- [STUDIO:"rp-micorp-sapi-console"]<flow name="rp-micorp-sapi-console">
+        <http:listener path="/console/*" config-ref="HTTP_Listener_config" doc:name="Http request listener">
+            <http:response statusCode="#[vars.httpStatus default 200&#93;">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}&#93;&#93;&#93;></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500&#93;">
+                <http:body><![CDATA[#[payload&#93;&#93;&#93;></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}&#93;&#93;&#93;></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="rp-micorp-sapi-config"/>
+		<error-handler ref="global-error-handlerError_Handler" />
+    </flow> [STUDIO] -->
+    <flow name="get:\healthCheck:rp-micorp-sapi-config" doc:id="5fc1ae5e-64f0-4eef-80d3-961a80316575">
+		<flow-ref doc:name="health check flow" doc:id="d241350a-5870-4ec3-8ed2-2d9d0f0d9a2f" name="health-checkSub_Flow"/>
+		<error-handler ref="global-error-handlerError_Handler" />
+    
+    </flow>
+    <flow name="get:\customer\(email):rp-micorp-sapi-config" doc:id="8a2d0477-649a-4411-bfe7-651ed7b6dedd">
+		<flow-ref doc:name="get customer flow" doc:id="34a2c7e0-bf00-47b0-9622-562a8b3fe438" name="customerSub_Flow"/>
+		<error-handler ref="global-error-handlerError_Handler" />
+        
+    </flow>
+    <flow name="post:\customer:application\json:rp-micorp-sapi-config" doc:id="660f4ad0-7bdd-415c-afad-dfd0248ba57e">
+		<flow-ref doc:name="post customer flow" doc:id="0201afd2-7488-40c1-b3cf-38382bf5dcc8" name="customerSub_Flow1"/>
+		<error-handler ref="global-error-handlerError_Handler" />
+        
+    </flow>
+    <flow name="post:\order:application\json:rp-micorp-sapi-config" doc:id="cf0340bf-b2b9-4363-bf10-b95187499124">
+		<flow-ref doc:name="post order flow" doc:id="4b001dd1-2313-44c8-8453-7e31b12762ed" name="ordersSub_Flow"/>
+		<error-handler ref="global-error-handlerError_Handler" />
+        
+    </flow>
+    <flow name="post:\item:application\json:rp-micorp-sapi-config" doc:id="3a8711d6-29ed-4073-8ecd-094b5505564e">
+		<flow-ref doc:name="post item flow" doc:id="b7fec8f3-ef50-48c5-98a2-c7fcd4196bfc" name="itemsSub_Flow"/>
+		<error-handler ref="global-error-handlerError_Handler" />
+    </flow>    
+</mule>

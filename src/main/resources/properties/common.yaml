@@ -1,0 +1,7 @@
+#json logger config
+json:
+  logger:
+    application:
+      name: "rp-micorp-sapi"
+      version: "1.0.0"
+      
